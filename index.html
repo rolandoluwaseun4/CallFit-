@@ -489,9 +489,11 @@ async function loadWater(){
   S.water=data?.glasses||0;
 }
 async function loadWorkouts(){
-  const today=new Date().toISOString().split('T')[0];
-  const{data}=await sb.from('workout_logs').select('*').eq('user_id',S.user.id).gte('created_at',today).catch(()=>({data:[]}));
-  S.workouts=data||[];
+  try{
+    const today=new Date().toISOString().split('T')[0];
+    const{data}=await sb.from('workout_logs').select('*').eq('user_id',S.user.id).gte('created_at',today);
+    S.workouts=data||[];
+  }catch(e){S.workouts=[];}
 }
 async function loadStreak(){
   // Calculate streak from meal_logs - count consecutive days
